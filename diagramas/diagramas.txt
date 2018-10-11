@@ -1,0 +1,5 @@
+1) diagrama modular
+2) diagrama de clases
+3) integracion de sistemas
+4) entidad relacion
+5) casos de usos
