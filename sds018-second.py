@@ -2,6 +2,8 @@ import os
 import sys
 import time
 import serial
+import numpy as np
+import matplotlib.pyplot as plt
 
 # Reopen sys.stdout with buffer size 0 (unbuffered)
 sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
@@ -20,6 +22,7 @@ class SDS021Reader:
         while True: 
             while self.serial.inWaiting() != 0:
                 v = ord(self.serial.read())
+                
 
                 if step == 0:
                     if v == 170:
@@ -37,6 +40,7 @@ class SDS021Reader:
                     # Compute PM2.5 and PM10 values
                     pm25 = (values[1]*256 + values[0])/10.0
                     pm10 = (values[3]*256 + values[2])/10.0
+                    #print values
                     return [pm25,pm10]
 
                 elif step >= 2:
@@ -52,8 +56,20 @@ class SDS021Reader:
                 values = self.readValue()
                 species[0].append(values[0])
                 species[1].append(values[1])
-                print("PM2.5: {}, PM10: {}".format(values[0], values[1]))
-                time.sleep(1)  # wait for one second
+                print("loop: {}, PM2.5: {}, PM10: {}, StdDev(PM2.5):{:3.1f}".format(len(species[0]), values[0], values[1], np.std(species[0])))
+                #time.sleep(1)  # wait for one second
+                if(len(species[0]) >= 300):
+                    
+                    Y = species[0]
+                    X = species[1]
+
+                    plt.plot(Y)
+                    plt.show()
+
+                    plt.plot(X)
+                    plt.show()
+                    species = [[],[]]
+
             except KeyboardInterrupt:
                 print("Quit!")
                 sys.exit()
@@ -67,10 +83,5 @@ def loop(usbport):
     while 1:
         reader.read()
 
-if len(sys.argv)==2:
-    if sys.argv[1].startswith('/dev'):  # Valid are only parameters starting with /dev
-        loop(sys.argv[1])
-    else:
-        loop(USBPORT)
-else:
-    loop(USBPORT)
+
+loop(USBPORT)
