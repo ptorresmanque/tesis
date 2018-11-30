@@ -1,3 +1,10 @@
 -toma de deciciones despues de los datos
 -avance del prototipo en interfaz
 -informe completo todo junto
+
+
+--------------------------------
+
+-PICOS DE CONTAMINACION ASOCIARLOS A EVENTOS PARTICULARES DE LA FECHA(EVENTOS SOCIALES, ETC)
+-PREVENCION DE PICOS DE CONTAMINACION SEGUN EVENTOS PROXIMOS
+-
