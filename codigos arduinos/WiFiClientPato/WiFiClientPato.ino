@@ -3,11 +3,11 @@
 #include "RestClient.h"
 
 
-#define IP "172.16.169.218" // Server IP
+#define IP "http://95b1f751.ngrok.io" // Server IP
 #define PORT 3678     // Server Port
 
-const char* ssid     = "wifi_uctemuco_libre";
-const char* password = "";
+const char* ssid     = "PTORRES";
+const char* password = "manquepillan";
 int incomingByte = 0;
 int paso = 0;
 int values[7];
