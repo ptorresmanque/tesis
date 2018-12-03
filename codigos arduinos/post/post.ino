@@ -15,12 +15,7 @@ DHT dht(dht_dpin, DHTTYPE);
 const char* ssid     = "PTORRES";
 const char* password = "manquepillan";
 
-WiFiClient client;
-const char* host="http://jsonplaceholder.typicode.com/";
-String PostData = "Temperatura=0Humedad=0PM10=0PM25=0Lat=1Long=1";
 
-int cero = 0;
-String response;
 
 void setup() {
   // put your setup code here, to run once:
@@ -59,7 +54,7 @@ void loop() {
   float t = dht.readTemperature();
 
   HTTPClient http;
-  http.begin("http://95b1f751.ngrok.io/api/saveMuestra");
+  http.begin("http://104.248.179.246/api/saveMuestra");
   http.addHeader("Content-Type", "application/x-www-form-urlencoded");
   http.POST("Temperatura="+String(t)+"&Humedad="+String(h)+"&PM10=0&PM25=0&Lat=2&Long=2");
   http.writeToStream(&Serial);
