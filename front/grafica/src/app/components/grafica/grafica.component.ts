@@ -22,6 +22,9 @@ export class GraficaComponent implements OnInit {
   ];
 
   public lineChartLabels: Array<String> = [];
+  public lineChartOptions: any = {
+    responsive: true
+  };
   constructor(private http: HttpClient, public wsService: WebsocketService) { }
 
   public temperatura: Array<number> = new Array();
@@ -36,7 +39,7 @@ export class GraficaComponent implements OnInit {
   }
 
   getData() {
-    this.http.get('http://localhost:5000/muestras').subscribe( data => {
+    this.http.get('http://138.68.45.13:5000/muestras').subscribe( data => {
       console.log(data);
       for (const i in data) {
         if (data.hasOwnProperty(i)) {

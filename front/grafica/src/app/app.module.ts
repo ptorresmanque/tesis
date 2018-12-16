@@ -4,7 +4,7 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { ChartsModule } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
 
-const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
+const config: SocketIoConfig = { url: 'http://138.68.45.13:5000', options: {} };
 
 import { AppComponent } from './app.component';
 import { GraficaComponent } from './components/grafica/grafica.component';

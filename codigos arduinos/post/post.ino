@@ -6,8 +6,7 @@
 #include "RestClient.h"
 
 
-#define IP "http://95b1f751.ngrok.io" // Server IP
-#define PORT 3678     // Server Port
+
 #define DHTTYPE DHT11   // DHT 11
 #define dht_dpin 2
 DHT dht(dht_dpin, DHTTYPE);
@@ -54,7 +53,7 @@ void loop() {
   float t = dht.readTemperature();
 
   HTTPClient http;
-  http.begin("http://104.248.179.246/api/saveMuestra");
+  http.begin("http://138.68.45.13:5000/saveMuestra");
   http.addHeader("Content-Type", "application/x-www-form-urlencoded");
   http.POST("Temperatura="+String(t)+"&Humedad="+String(h)+"&PM10=0&PM25=0&Lat=2&Long=2");
   http.writeToStream(&Serial);
