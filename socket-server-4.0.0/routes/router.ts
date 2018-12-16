@@ -17,6 +17,9 @@ router.post('/saveMuestra', (req: Request, res: Response) =>{
     var muestra = new muestraModel();
     var params = req.body;
 
+    const server = Server.instance;
+    
+
     muestra.Temperatura = params.Temperatura;
     muestra.Humedad = params.Humedad;
     muestra.PM10 = params.PM10;
@@ -29,13 +32,19 @@ router.post('/saveMuestra', (req: Request, res: Response) =>{
             res.status(500).send({ message: 'erro al guardar la muestra en la sopa du macaco es uma delicia' });
         } else {
             res.status(200).send({ muestra: muestraStored })
+            server.io.emit('nuevo-dato', muestraStored);
         }  
     });
+
+    
+
+    
+
 });
 
 router.get('/muestras', ( req: Request, res: Response  ) => {
 
-    muestraModel.find({}).sort('-date').exec((err, muestras) => {
+    muestraModel.find({}).sort('-date').limit(1000).exec((err, muestras) => {
         if (err) {
             res.status(500).send({ message: 'erro al devolver las muestras en la sopa du macaco es uma delicia' });
         } else {
