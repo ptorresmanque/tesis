@@ -9,16 +9,16 @@ import { WebsocketService } from '../../services/websocket.service';
 })
 export class GraficaComponent implements OnInit {
   public lineChartDataTemperatura: Array<any> = [
-    {data: [], label: 'Temperatura'}
+    {data: [], label: 'Temperatura', pointRadius: 0, lineTension: 0}
   ];
   public lineChartDataHumedad: Array<any> = [
-    {data: [], label: 'Humedad'}
+    {data: [], label: 'Humedad', pointRadius: 0, lineTension: 0}
   ];
   public lineChartDataPM10: Array<any> = [
-    {data: [], label: 'PM10'}
+    {data: [], label: 'PM10', pointRadius: 0, lineTension: 0}
   ];
   public lineChartDataPM25: Array<any> = [
-    {data: [], label: 'PM2.5'}
+    {data: [], label: 'PM2.5', pointRadius: 0, lineTension: 0}
   ];
 
   public lineChartLabels: Array<String> = [];
@@ -32,6 +32,9 @@ export class GraficaComponent implements OnInit {
   public pm10: Array<number> = new Array();
   public pm25: Array<number> = new Array();
   public fechas: Array<any> = new Array();
+
+  public lastTemperatura;
+  public lastHumedad;
 
   ngOnInit() {
     this.getData();
@@ -56,6 +59,8 @@ export class GraficaComponent implements OnInit {
         }
       }
       this.lineChartLabels.reverse();
+      this.lastTemperatura = this.temperatura[0];
+      this.lastHumedad = this.humedad[0];
       this.temperatura.reverse();
       this.humedad.reverse();
       this.pm10.reverse();
@@ -82,12 +87,14 @@ export class GraficaComponent implements OnInit {
       this.temperatura.push(data.Temperatura);
       if (this.temperatura.length > 1000) {
         this.temperatura.reverse();
+        this.lastTemperatura = this.temperatura[0];
         this.temperatura.pop();
         this.temperatura.reverse();
       }
       this.humedad.push(data.Humedad);
       if (this.humedad.length > 1000) {
         this.humedad.reverse();
+        this.lastHumedad = this.humedad[0];
         this.humedad.pop();
         this.humedad.reverse();
       }
