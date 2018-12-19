@@ -59,6 +59,6 @@ void loop() {
   http.writeToStream(&Serial);
   http.end();
 
-  delay(5000);
+  delay(86400);
   
 }
