@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { WebsocketService } from '../../services/websocket.service';
+import { DatePipe } from '@angular/common';
+
 
 @Component({
   selector: 'app-grafica',
@@ -35,6 +37,7 @@ export class GraficaComponent implements OnInit {
 
   public lastTemperatura;
   public lastHumedad;
+  public lastTime;
 
   ngOnInit() {
     this.getData();
@@ -58,6 +61,7 @@ export class GraficaComponent implements OnInit {
           }
         }
       }
+      this.lastTime = this.lineChartLabels[0];
       this.lineChartLabels.reverse();
       this.lastTemperatura = this.temperatura[0];
       this.lastHumedad = this.humedad[0];
@@ -113,6 +117,7 @@ export class GraficaComponent implements OnInit {
       this.lineChartLabels.push(data.date);
       if (this.lineChartLabels.length > 1000) {
         this.lineChartLabels.reverse();
+        this.lastTime = this.lineChartLabels[0];
         this.lineChartLabels.pop();
         this.lineChartLabels.reverse();
       }

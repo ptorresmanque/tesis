@@ -4,6 +4,7 @@
 <div class="row">
     <div class="col-md-12">
         <h3>Temperatura: {{lastTemperatura}} °C</h3>
+        <p>{{lastTime | date:'fullDate'}}, {{lastTime | date:'h:mm a z'}}</p>
         <div style="display: block;">
             <canvas baseChart width="800" height="400" [datasets]="lineChartDataTemperatura" [labels]="lineChartLabels" [chartType]="'line'" [options]="lineChartOptions"></canvas>
         </div>
