@@ -1,33 +1,137 @@
-<h1>Grafica Dinamica</h1>
+<h1>Mini Estacion</h1>
 <hr>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-8">
         <h3>Temperatura: {{lastTemperatura}} °C</h3>
         <p>{{lastTime | date:'fullDate'}}, {{lastTime | date:'h:mm a z'}}</p>
         <div style="display: block;">
-            <canvas baseChart width="800" height="400" [datasets]="lineChartDataTemperatura" [labels]="lineChartLabels" [chartType]="'line'" [options]="lineChartOptions"></canvas>
+            <canvas baseChart width="800" height="450" [datasets]="lineChartDataTemperatura" [labels]="lineChartLabels" [chartType]="'line'" [options]="lineChartOptions"></canvas>
         </div>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-4">
+        <h4>Posibles causas de picos de temperatura</h4>
+        <hr>
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Ola de calor</h5>
+                    <small>Proximos 3 dias</small>
+                </div>
+                <p class="mb-1">Alta presion proveniente del norte.</p>
+                <small>Metereologia Chile.</small>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Noches Frias</h5>
+                    <small class="text-muted">Todos los dias</small>
+                </div>
+                <p class="mb-1">En las noches se registran las temperaturas mas bajas.</p>
+                <small class="text-muted">Metereologia Chile.</small>
+            </a>
+        </div>
+    </div>
+    <div class="col-md-8">
         <h3>Humedad: {{lastHumedad}} %</h3>
         <div style="display: block;">
-            <canvas baseChart width="800" height="400" [datasets]="lineChartDataHumedad" [labels]="lineChartLabels" [chartType]="'line'" [options]="lineChartOptions"></canvas>
+            <canvas baseChart width="800" height="450" [datasets]="lineChartDataHumedad" [labels]="lineChartLabels" [chartType]="'line'" [options]="lineChartOptions"></canvas>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h4>Posibles causas de picos de Humedad</h4>
+        <hr>
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Temporadad seca</h5>
+                    <small>Proximos meses</small>
+                </div>
+                <p class="mb-1">La humedad es baja en ambientes secos, puede variar en posiciones espesificas</p>
+                <small>Metereologia Chile.</small>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">llovizna menor</h5>
+                    <small class="text-muted">Hoy</small>
+                </div>
+                <p class="mb-1">llovizna vespertina aumenta la Humedad.</p>
+                <small class="text-muted">Metereologia Chile.</small>
+            </a>
         </div>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <h3>PM10</h3>
         <div style="display: block;">
-            <canvas baseChart width="800" height="800" [datasets]="lineChartDataPM10" [labels]="lineChartLabels" [chartType]="'line'" [options]="lineChartOptions"></canvas>
+            <canvas baseChart width="800" height="450" [datasets]="lineChartDataPM10" [labels]="lineChartLabels" [chartType]="'line'" [options]="lineChartOptions"></canvas>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
+        <h4>Posibles causas de picos de PM10</h4>
+        <hr>
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Partido de la seleccion Chilena</h5>
+                    <small>Proximo domingo</small>
+                </div>
+                <p class="mb-1">Los dias con partidos de la seleccion la contaminacion aumenta debido a los asados realizados con carbon al aire libre.</p>
+                <small>Noticias Deporte.</small>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Primer lunes de Marzo</h5>
+                    <small class="text-muted">4 de Marzo</small>
+                </div>
+                <p class="mb-1">La afluencia de gente en las calles aumenta drasticamente, por consiguiente vehiculos en las calles y contaminacion en el ambiente.</p>
+                <small class="text-muted">Noticias actualidad.</small>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Variacion del precio de los combustibles</h5>
+                    <small class="text-muted">Todos los jueves</small>
+                </div>
+                <p class="mb-1">La variacion de los precios de los combustibles puede variar el consumo de estos.</p>
+                <small class="text-muted">Noticias La legal.</small>
+            </a>
+        </div>
+    </div>
+    <div class="col-md-8">
         <h3>PM2.5</h3>
         <div style="display: block;">
-            <canvas baseChart width="800" height="800" [datasets]="lineChartDataPM25" [labels]="lineChartLabels" [chartType]="'line'" [options]="lineChartOptions"></canvas>
+            <canvas baseChart width="800" height="450" [datasets]="lineChartDataPM25" [labels]="lineChartLabels" [chartType]="'line'" [options]="lineChartOptions"></canvas>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h4>Posibles causas de picos de MP2.5</h4>
+        <hr>
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Partido de la seleccion Chilena</h5>
+                    <small>Proximo domingo</small>
+                </div>
+                <p class="mb-1">Los dias con partidos de la seleccion la contaminacion aumenta debido a los asados realizados con carbon al aire libre.</p>
+                <small>Noticias Deporte.</small>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Primer lunes de Marzo</h5>
+                    <small class="text-muted">4 de Marzo</small>
+                </div>
+                <p class="mb-1">La afluencia de gente en las calles aumenta drasticamente, por consiguiente vehiculos en las calles y contaminacion en el ambiente.</p>
+                <small class="text-muted">Noticias actualidad.</small>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Variacion del precio de los combustibles</h5>
+                    <small class="text-muted">Todos los jueves</small>
+                </div>
+                <p class="mb-1">La variacion de los precios de los combustibles puede variar el consumo de estos.</p>
+                <small class="text-muted">Noticias La legal.</small>
+            </a>
         </div>
     </div>
 </div>
