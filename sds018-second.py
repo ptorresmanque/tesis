@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
 
 # Set default USB port
-USBPORT = "COM8"
+USBPORT = "COM7"
 
 
 class SDS021Reader:

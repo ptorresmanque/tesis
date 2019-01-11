@@ -1,10 +1,13 @@
 #include <ESP8266WiFi.h>
-#include <ArduinoJson.h>
-#include "RestClient.h"
+#include <SoftwareSerial.h>
+#include <ESP8266HTTPClient.h>
+#include "DHT.h" 
 
 
-#define IP "http://95b1f751.ngrok.io" // Server IP
-#define PORT 3678     // Server Port
+#define DHTTYPE DHT11   // DHT 11
+#define dht_dpin D5
+DHT dht(dht_dpin, DHTTYPE);
+
 
 const char* ssid     = "PTORRES";
 const char* password = "manquepillan";
@@ -14,11 +17,13 @@ int values[7];
 float pm10;
 float pm25;
 int cero = 0;
+int initTime = millis();
 
-RestClient client = RestClient(IP, PORT);
+SoftwareSerial smp(D3, D4); //Rx, Tx
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
+  smp.begin(9600);
   delay(10);
 
   // We start by connecting to a WiFi network
@@ -41,17 +46,18 @@ void setup() {
   Serial.println("WiFi connected");  
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
-  client.dhcp();
+
+  dht.begin();
 }
 
-int value = 0;
-String response;
 
 void loop() {
+  float h = dht.readHumidity();
+  float t = dht.readTemperature(); 
   
-  if (Serial.available() > 0) {
+  if (smp.available() > 0) {
     // read the incoming byte:
-    incomingByte = Serial.read();
+    incomingByte = smp.read();
     if(paso == 0 ){
       if(incomingByte == 170){
         paso = 1;
@@ -70,35 +76,27 @@ void loop() {
       Serial.println(pm25);
       Serial.print("pm10:   ");
       Serial.println(pm10);
+      Serial.print("Humedad:   ");
+      Serial.println(h);
+      Serial.print("Temperatura:   ");
+      Serial.println(t);
 
-      response = "";
-      client.setHeader("Content-Type: application/x-www-form-urlencoded");
-      StaticJsonBuffer<200> jsonBuffer;
-      char json[256];
-      JsonObject& root = jsonBuffer.createObject();
-      root["Temperatura"] = cero;
-      root["Humedad"] = cero;
-      root["PM10"] = pm10;
-      root["PM25"] = pm25;
-      root["Lat"] = cero;
-      root["Long"] = cero;
-      root.printTo(json, sizeof(json));
-      Serial.println(json);
-      int statusCode = client.post("/api/saveMuestra", json, &response);
-      Serial.print("Status code from server: ");
-      Serial.println(statusCode);
-      Serial.print("Response body from server: ");
-      Serial.println(response);
+      
       
     }else if(paso >= 2){
       values[paso - 2] = incomingByte;
       paso = paso + 1;
     }
+  }
 
-    
-
-    //Serial.print("I received: ");
-    //Serial.println(incomingByte, DEC);
-  }   
+  if((millis() - initTime)> 86400){
+    HTTPClient http;
+    http.begin("http://138.68.45.13:5000/saveMuestra");
+    http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+    http.POST("Temperatura="+String(t)+"&Humedad="+String(h)+"&PM10="+String(pm10)+"&PM25="+String(pm25)+"&Lat=2&Long=2");
+    http.writeToStream(&Serial);
+    http.end();
+    initTime = millis();    
+    } 
 }
 
