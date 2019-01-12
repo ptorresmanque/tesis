@@ -1,12 +1,18 @@
+#include <AsyncTaskLib.h>
 #include <ESP8266WiFi.h>
 #include <SoftwareSerial.h>
 #include <ESP8266HTTPClient.h>
-#include "DHT.h" 
+#include "DHT.h"
+#include <TinyGPS++.h> 
 
 
 #define DHTTYPE DHT11   // DHT 11
 #define dht_dpin D5
 DHT dht(dht_dpin, DHTTYPE);
+
+static const int RXPin = D6, TXPin = D7;
+
+TinyGPSPlus gps;
 
 
 const char* ssid     = "PTORRES";
@@ -16,14 +22,30 @@ int paso = 0;
 int values[7];
 float pm10;
 float pm25;
-int cero = 0;
+float t;
+float h;
+String latitud;
+String longitud;
 int initTime = millis();
 
 SoftwareSerial smp(D3, D4); //Rx, Tx
+SoftwareSerial ss(RXPin, TXPin);
+
+AsyncTask Post(86400, true, []() { 
+  HTTPClient http;
+  http.begin("http://138.68.45.13:5000/saveMuestra");
+  http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+  http.POST("Temperatura="+String(t)+"&Humedad="+String(h)+"&PM10="+String(pm10)+"&PM25="+String(pm25)+"&Lat="+latitud+"&Long="+longitud);
+  http.writeToStream(&Serial);
+  http.end();
+  Serial.println("");
+  initTime = millis(); 
+});
 
 void setup() {
   Serial.begin(115200);
   smp.begin(9600);
+  ss.begin(9600);
   delay(10);
 
   // We start by connecting to a WiFi network
@@ -48,12 +70,21 @@ void setup() {
   Serial.println(WiFi.localIP());
 
   dht.begin();
+  Post.Start();
 }
 
 
 void loop() {
-  float h = dht.readHumidity();
-  float t = dht.readTemperature(); 
+  h = dht.readHumidity();
+  delayMicroseconds(10);
+  t = dht.readTemperature();
+  delayMicroseconds(10);
+
+  if(ss.available() > 0){
+    if (gps.encode(ss.read()))
+      displayInfo();
+  }
+   
   
   if (smp.available() > 0) {
     // read the incoming byte:
@@ -80,6 +111,10 @@ void loop() {
       Serial.println(h);
       Serial.print("Temperatura:   ");
       Serial.println(t);
+      Serial.print("Latitud:   ");
+      Serial.println(latitud);
+      Serial.print("Logitud:   ");
+      Serial.println(longitud);
 
       
       
@@ -88,15 +123,60 @@ void loop() {
       paso = paso + 1;
     }
   }
+  Post.Update();
+  
 
-  if((millis() - initTime)> 86400){
-    HTTPClient http;
-    http.begin("http://138.68.45.13:5000/saveMuestra");
-    http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-    http.POST("Temperatura="+String(t)+"&Humedad="+String(h)+"&PM10="+String(pm10)+"&PM25="+String(pm25)+"&Lat=2&Long=2");
-    http.writeToStream(&Serial);
-    http.end();
-    initTime = millis();    
-    } 
 }
 
+void displayInfo()
+{
+  Serial.print(F("Location: ")); 
+  if (gps.location.isValid())
+  {
+    latitud = String(gps.location.lat(), 8);
+    longitud = String(gps.location.lng(), 8);
+    Serial.print(latitud);
+    Serial.print(F(","));
+    Serial.print(longitud);
+  }
+  else
+  {
+    Serial.print(F("INVALID"));
+  }
+
+  Serial.print(F("  Date/Time: "));
+  if (gps.date.isValid())
+  {
+    Serial.print(gps.date.month());
+    Serial.print(F("/"));
+    Serial.print(gps.date.day());
+    Serial.print(F("/"));
+    Serial.print(gps.date.year());
+  }
+  else
+  {
+    Serial.print(F("INVALID"));
+  }
+
+  Serial.print(F(" "));
+  if (gps.time.isValid())
+  {
+    if (gps.time.hour() < 10) Serial.print(F("0"));
+    Serial.print(gps.time.hour());
+    Serial.print(F(":"));
+    if (gps.time.minute() < 10) Serial.print(F("0"));
+    Serial.print(gps.time.minute());
+    Serial.print(F(":"));
+    if (gps.time.second() < 10) Serial.print(F("0"));
+    Serial.print(gps.time.second());
+    Serial.print(F("."));
+    if (gps.time.centisecond() < 10) Serial.print(F("0"));
+    Serial.print(gps.time.centisecond());
+  }
+  else
+  {
+    Serial.print(F("INVALID"));
+  }
+
+  Serial.println();
+}
