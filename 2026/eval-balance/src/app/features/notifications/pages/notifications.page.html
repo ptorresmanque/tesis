@@ -1,0 +1,50 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+  <main class="main-content">
+    <app-header title="Notificaciones"></app-header>
+    <div class="content">
+      <div class="notif-header">
+        <p class="notif-count">{{ notifications().filter(n => !n.read).length }} sin leer</p>
+        <button mat-stroked-button (click)="markAllAsRead()" [disabled]="notifications().filter(n => !n.read).length === 0">
+          <span class="material-symbols-outlined">done_all</span>
+          Marcar todo como leído
+        </button>
+      </div>
+
+      @for (group of groupedNotifications; track group.label) {
+        <div class="notif-group">
+          <h3 class="group-label">{{ group.label }}</h3>
+          <mat-card class="notif-list" appearance="outlined">
+            @for (item of group.items; track item.id) {
+              <div class="notif-item" [class.unread]="!item.read" (click)="markAsRead(item.id); navigate(item.link)">
+                <div class="notif-icon-wrapper" [ngClass]="item.type">
+                  <span class="material-symbols-outlined">{{ getIcon(item.type) }}</span>
+                </div>
+                <div class="notif-content">
+                  <div class="notif-title-row">
+                    <span class="notif-title">{{ item.title }}</span>
+                    @if (!item.read) { <span class="unread-dot"></span> }
+                  </div>
+                  <p class="notif-message">{{ item.message }}</p>
+                  <span class="notif-time">{{ timeAgo(item.timestamp) }}</span>
+                </div>
+                <span class="material-symbols-outlined notif-arrow">chevron_right</span>
+              </div>
+              @if (!$last) { <mat-divider></mat-divider> }
+            }
+          </mat-card>
+        </div>
+      }
+
+      @if (notifications().length === 0) {
+        <mat-card class="empty-state" appearance="outlined">
+          <div class="empty-content">
+            <span class="material-symbols-outlined empty-icon">notifications_off</span>
+            <h3>No hay notificaciones</h3>
+            <p>No tienes notificaciones nuevas</p>
+          </div>
+        </mat-card>
+      }
+    </div>
+  </main>
+</div>

@@ -1,0 +1,152 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+  <main class="main-content">
+    <app-header title="Mis Evaluaciones"></app-header>
+    <div class="content">
+      <div class="load-header">
+        <div class="circular-progress-wrapper">
+          <div class="circular-progress" [style.background]="'radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(#1565c0 ' + (currentLoad / maxLoad) * 100 + '%, #e7eeff 0)'">
+            <div class="progress-inner">
+              <span class="progress-value">{{ currentLoad }}</span>
+              <span class="progress-max">/{{ maxLoad }}</span>
+            </div>
+          </div>
+          <div class="load-label">Carga Actual</div>
+          <div class="load-sub">Límite saludable: {{ maxLoad }}</div>
+        </div>
+        <div class="load-stats">
+          <div class="stat-item">
+            <span class="stat-value">{{ evaluations().length }}</span>
+            <span class="stat-label">Total</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value urgent">{{ pending.length }}</span>
+            <span class="stat-label">Pendientes</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value success">{{ inProgress.length }}</span>
+            <span class="stat-label">En Progreso</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value done">{{ completed.length }}</span>
+            <span class="stat-label">Completadas</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="kanban-board">
+        <div class="kanban-column">
+          <div class="kanban-header pending-header">
+            <span>Pendientes</span>
+            <span class="count-badge">{{ pending.length }}</span>
+          </div>
+          <div class="kanban-cards">
+            @for (item of pending; track item.id) {
+              <mat-card class="task-card" [ngClass]="{'overdue': isOverdue(item)}" appearance="outlined">
+                <mat-card-header>
+                  <mat-card-title>{{ item.title }}</mat-card-title>
+                  <mat-card-subtitle>{{ item.course }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="task-meta">
+                    <span class="complexity-chip" [style.background]="item.complexity > 3 ? '#fff3e0' : '#e8f5e9'" [style.color]="item.complexity > 3 ? '#e65100' : '#2e7d32'">Complejidad {{ item.complexity }}</span>
+                    @if (isOverdue(item)) {
+                      <span class="overdue-badge">VENCIDA</span>
+                    }
+                  </div>
+                  <div class="task-due">
+                    <span class="material-symbols-outlined">schedule</span>
+                    <span>{{ daysUntil(item.dueDate) }} días restantes</span>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            }
+          </div>
+        </div>
+
+        <div class="kanban-column">
+          <div class="kanban-header progress-header">
+            <span>En Progreso</span>
+            <span class="count-badge">{{ inProgress.length }}</span>
+          </div>
+          <div class="kanban-cards">
+            @for (item of inProgress; track item.id) {
+              <mat-card class="task-card" appearance="outlined">
+                <mat-card-header>
+                  <mat-card-title>{{ item.title }}</mat-card-title>
+                  <mat-card-subtitle>{{ item.course }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="task-meta">
+                    <span class="complexity-chip" style="background: #e3f2fd; color: #1565c0;">En revisión</span>
+                  </div>
+                  <div class="task-due">
+                    <span class="material-symbols-outlined">schedule</span>
+                    <span>{{ daysUntil(item.dueDate) }} días restantes</span>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            }
+          </div>
+        </div>
+
+        <div class="kanban-column">
+          <div class="kanban-header completed-header">
+            <span>Completadas</span>
+            <span class="count-badge">{{ completed.length }}</span>
+          </div>
+          <div class="kanban-cards">
+            @for (item of completed; track item.id) {
+              <mat-card class="task-card" appearance="outlined">
+                <mat-card-header>
+                  <mat-card-title>{{ item.title }}</mat-card-title>
+                  <mat-card-subtitle>{{ item.course }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="task-meta">
+                    <span class="grade-badge">Calificación: {{ item.grade }}/{{ item.maxGrade }}</span>
+                  </div>
+                  <div class="task-due">
+                    <span class="material-symbols-outlined">check_circle</span>
+                    <span style="color: #2e7d32;">Completada</span>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            }
+          </div>
+        </div>
+      </div>
+
+      <button class="fab-button" (click)="openExtensionModal()" mat-fab color="primary" aria-label="Solicitar extensión">
+        <span class="material-symbols-outlined">add</span>
+      </button>
+
+      @if (showExtensionModal()) {
+        <div class="modal-overlay" (click)="closeExtensionModal()">
+          <mat-card class="extension-modal" appearance="outlined" (click)="$event.stopPropagation()">
+            <mat-card-header>
+              <mat-card-title>Solicitar Extensión</mat-card-title>
+              <mat-card-subtitle>Justifique su solicitud para enviarla al profesor</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Motivo de la extensión</mat-label>
+                <textarea matInput [(ngModel)]="extensionReason" rows="4" placeholder="Describa el motivo..."></textarea>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nueva fecha propuesta</mat-label>
+                <input matInput [matDatepicker]="extPicker">
+                <mat-datepicker-toggle matSuffix [for]="extPicker"></mat-datepicker-toggle>
+                <mat-datepicker #extPicker></mat-datepicker>
+              </mat-form-field>
+            </mat-card-content>
+            <mat-card-actions align="end">
+              <button mat-button (click)="closeExtensionModal()">Cancelar</button>
+              <button mat-flat-button color="primary" (click)="submitExtension()">Enviar Solicitud</button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      }
+    </div>
+  </main>
+</div>

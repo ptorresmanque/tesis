@@ -1,0 +1,38 @@
+<header class="header">
+  <div class="header-left">
+    <button class="menu-btn" (click)="menuToggled.emit()" mat-icon-button>
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <h1 class="page-title">{{ title() }}</h1>
+  </div>
+  <div class="header-right">
+    <button class="notif-btn" (click)="onNotifications()" mat-icon-button>
+      <span class="material-symbols-outlined">notifications</span>
+      @if (unreadCount() > 0) {
+        <span class="notif-badge">{{ unreadCount() }}</span>
+      }
+    </button>
+    <button [matMenuTriggerFor]="userMenu" class="user-btn" mat-button>
+      <span class="material-symbols-outlined">account_circle</span>
+      @if (user) {
+        <span class="user-name">{{ user.name }}</span>
+      }
+      <span class="material-symbols-outlined">arrow_drop_down</span>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item (click)="goToProfile()">
+        <span class="material-symbols-outlined">person</span>
+        <span>Perfil</span>
+      </button>
+      <button mat-menu-item (click)="goToSettings()">
+        <span class="material-symbols-outlined">settings</span>
+        <span>Configuración</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="onLogout()">
+        <span class="material-symbols-outlined">logout</span>
+        <span>Cerrar Sesión</span>
+      </button>
+    </mat-menu>
+  </div>
+</header>

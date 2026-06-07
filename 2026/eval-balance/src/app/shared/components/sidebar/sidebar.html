@@ -1,0 +1,32 @@
+<aside class="sidebar" [class.collapsed]="collapsed">
+  <div class="sidebar-header">
+    <div class="logo-area">
+      <span class="material-symbols-outlined logo-icon">balance</span>
+      @if (!collapsed) { <span class="app-name">EvalBalance</span> }
+    </div>
+    <button class="collapse-btn" (click)="toggleCollapse()" mat-icon-button>
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+  </div>
+  <nav class="sidebar-nav">
+    @for (item of visibleItems; track item.path) {
+      <a class="nav-item" [routerLink]="item.path" routerLinkActive="active" [routerLinkActiveOptions]="{exact: item.path === '/dashboard'}">
+        <span class="material-symbols-outlined nav-icon">{{ item.icon }}</span>
+        @if (!collapsed) {
+          <span class="nav-label">{{ item.label }}</span>
+        }
+      </a>
+    }
+  </nav>
+  @if (!collapsed) {
+    <div class="sidebar-footer">
+      <div class="balance-indicator">
+        <span class="text-xs text-on-surface-variant">Balance Global</span>
+        <div class="flex items-center gap-2">
+          <div class="progress-bar"><div class="progress-fill" style="width: 89%"></div></div>
+          <span class="text-sm font-semibold text-primary">89%</span>
+        </div>
+      </div>
+    </div>
+  }
+</aside>

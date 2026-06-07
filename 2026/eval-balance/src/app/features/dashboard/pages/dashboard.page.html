@@ -1,0 +1,97 @@
+<div class="dashboard-layout">
+  <app-sidebar></app-sidebar>
+  <main class="main-content" [class.expanded]="sidebarCollapsed()">
+    <app-header title="Dashboard General"></app-header>
+
+    <div class="dashboard-content">
+      @if (loadMetric(); as lm) {
+        <div class="metric-cards">
+          <mat-card class="metric-card" appearance="outlined">
+            <div class="metric-icon" style="background: #e3f2fd;">
+              <span class="material-symbols-outlined" style="color: #1565c0;">speed</span>
+            </div>
+            <div class="metric-info">
+              <p class="metric-label">Carga Actual</p>
+              <div class="metric-value-row">
+                <span class="metric-value">{{ lm.currentLoad }}/{{ lm.maxLoad }}</span>
+                <span class="risk-badge" [ngClass]="{'low': lm.riskPercentage < 20, 'medium': lm.riskPercentage >= 20 && lm.riskPercentage < 40, 'high': lm.riskPercentage >= 40}">
+                  {{ lm.riskPercentage }}% Riesgo
+                </span>
+              </div>
+              <mat-progress-bar mode="determinate" [value]="(lm.currentLoad / lm.maxLoad) * 100" class="load-bar"></mat-progress-bar>
+            </div>
+          </mat-card>
+
+          <mat-card class="metric-card" appearance="outlined">
+            <div class="metric-icon" style="background: #fff3e0;">
+              <span class="material-symbols-outlined" style="color: #e65100;">assignment</span>
+            </div>
+            <div class="metric-info">
+              <p class="metric-label">Evaluaciones Pendientes</p>
+              <div class="metric-value-row">
+                <span class="metric-value">{{ lm.pendingEvaluations }}</span>
+                <span class="urgent-badge">{{ lm.urgentCount }} urgentes</span>
+              </div>
+              <div class="progress-text">Próximas a vencer: {{ lm.urgentCount }}</div>
+            </div>
+          </mat-card>
+
+          <mat-card class="metric-card" appearance="outlined">
+            <div class="metric-icon" style="background: #e8f5e9;">
+              <span class="material-symbols-outlined" style="color: #2e7d32;">balance</span>
+            </div>
+            <div class="metric-info">
+              <p class="metric-label">Equilibrio Global</p>
+              <div class="metric-value-row">
+                <span class="metric-value">{{ lm.globalBalance }}%</span>
+                <span class="text-sm text-on-surface-variant">σ {{ lm.stdDeviation }}</span>
+              </div>
+              <mat-progress-bar mode="determinate" [value]="lm.globalBalance" class="balance-bar"></mat-progress-bar>
+            </div>
+          </mat-card>
+        </div>
+      }
+
+      <div class="dashboard-grid">
+        <mat-card class="chart-card" appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>Proyección de Sobrecarga (7 días)</mat-card-title>
+            <mat-card-subtitle>Predicción LSTM</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="chart-placeholder">
+              <div class="chart-line">
+                @for (bar of [35, 42, 38, 45, 52, 48, 40]; track $index) {
+                  <div class="bar-wrapper">
+                    <div class="bar" [style.height.px]="bar"></div>
+                    <span class="bar-label">D{{ $index + 1 }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="chart-card" appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>Distribución de Carga por Curso</mat-card-title>
+            <mat-card-subtitle>Volumen actual</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="chart-placeholder">
+              @for (course of courses(); track course.id) {
+                <div class="course-bar-row">
+                  <span class="course-bar-label">{{ course.code }}</span>
+                  <div class="course-bar-track">
+                    <div class="course-bar-fill" [style.width.%]="(course.load / 5) * 100" [style.background]="course.load > 3.5 ? '#e65100' : course.load > 2.5 ? '#fdd835' : '#2e7d32'"></div>
+                  </div>
+                  <span class="course-bar-value">{{ course.load }}</span>
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </main>
+</div>

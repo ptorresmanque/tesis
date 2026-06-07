@@ -1,0 +1,26 @@
+.layout { display: flex; min-height: 100vh; }
+.main-content { flex: 1; margin-left: 260px; background: var(--color-background); }
+.content { padding: 24px; }
+.history-controls { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+.search-field { flex: 1; min-width: 250px; }
+.search-icon { margin-right: 8px; color: var(--color-outline); }
+.filter-chips { display: flex; gap: 4px; }
+.filter-chips button { font-size: 12px; padding: 0 16px; height: 36px; }
+.filter-chips button.active { background: var(--color-primary); color: white; }
+.sort-field { width: 160px; }
+.history-list { border-radius: 12px; overflow: hidden; }
+.eval-row { display: flex; align-items: center; gap: 16px; width: 100%; }
+.eval-info { flex: 1; }
+.eval-title { display: block; font-size: 14px; font-weight: 600; color: var(--color-on-surface); }
+.eval-course { font-size: 12px; color: var(--color-on-surface-variant); }
+.eval-meta { display: flex; align-items: center; gap: 12px; }
+.eval-status { font-size: 12px; font-weight: 600; }
+.eval-date { font-size: 13px; color: var(--color-on-surface-variant); }
+.eval-grade { font-size: 16px; font-weight: 700; }
+.expanded-detail { padding: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+.detail-row { display: flex; gap: 12px; align-items: flex-start; }
+.detail-label { font-size: 13px; font-weight: 600; color: var(--color-on-surface-variant); min-width: 110px; }
+.detail-value { font-size: 14px; color: var(--color-on-surface); }
+.detail-comment { font-size: 14px; color: var(--color-on-surface); margin: 0; }
+.empty-state { text-align: center; padding: 48px; color: var(--color-outline); }
+.empty-icon { font-size: 48px; display: block; margin-bottom: 8px; }

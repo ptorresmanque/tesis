@@ -1,0 +1,31 @@
+.layout { display: flex; min-height: 100vh; }
+.main-content { flex: 1; margin-left: 260px; background: var(--color-background); }
+.content { padding: 24px; }
+.assigner-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 24px; }
+@media (max-width: 1024px) { .assigner-grid { grid-template-columns: 1fr; } }
+.form-card { border-radius: 12px; }
+.form-card mat-card-content { display: flex; flex-direction: column; gap: 16px; padding-top: 16px; }
+.full-width { width: 100%; }
+.slider-row { display: flex; flex-direction: column; gap: 4px; }
+.slider-label { font-size: 13px; color: var(--color-on-surface-variant); }
+.dual-inputs { display: flex; gap: 12px; }
+.half-width { flex: 1; }
+.section-title { font-size: 14px; font-weight: 600; color: var(--color-on-surface); margin: 0; }
+.my-4 { margin: 16px 0; }
+.results-area { display: flex; flex-direction: column; gap: 20px; }
+.result-card { border-radius: 12px; }
+.result-card table { width: 100%; }
+.charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.small-chart { border-radius: 12px; }
+.dist-chart { display: flex; height: 32px; border-radius: 8px; overflow: hidden; }
+.dist-segment { display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 600; transition: flex 0.5s ease; }
+.dist-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; }
+.placeholder-card { border-radius: 12px; min-height: 400px; display: flex; align-items: center; justify-content: center; }
+.placeholder-content { text-align: center; }
+.placeholder-icon { font-size: 64px; color: var(--color-outline-variant); }
+.shap-card { border-radius: 12px; }
+.shap-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.shap-feature { width: 120px; font-size: 13px; color: var(--color-on-surface); flex-shrink: 0; }
+.shap-bar-track { flex: 1; height: 20px; background: var(--color-surface-container-high); border-radius: 10px; overflow: hidden; }
+.shap-bar { height: 100%; border-radius: 10px; transition: width 0.5s ease; }
+.shap-value { font-size: 13px; font-weight: 600; color: var(--color-primary); width: 40px; text-align: right; }

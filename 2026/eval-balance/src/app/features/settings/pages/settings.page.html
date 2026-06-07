@@ -1,0 +1,107 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+  <main class="main-content">
+    <app-header title="Configuración de Balanceo"></app-header>
+    <div class="content">
+      <div class="settings-grid">
+        <mat-card class="settings-card" appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>Algoritmo de Balanceo</mat-card-title>
+            <mat-card-subtitle>Seleccione el método de distribución</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-radio-group [(ngModel)]="algorithm" class="radio-group">
+              <mat-radio-button value="round_robin">Round-Robin</mat-radio-button>
+              <p class="radio-desc">Distribución equitativa secuencial</p>
+              <mat-radio-button value="weighted">Round-Robin Ponderado</mat-radio-button>
+              <p class="radio-desc">Balanceo con pesos por factor</p>
+              <mat-radio-button value="genetic">Algoritmo Genético</mat-radio-button>
+              <p class="radio-desc">Optimización global con GA</p>
+            </mat-radio-group>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="settings-card" appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>Pesos de Configuración</mat-card-title>
+            <mat-card-subtitle>Ajuste la importancia de cada factor</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content class="sliders-content">
+            <div class="weight-row">
+              <label>Volumen: {{ volume() }}</label>
+              <mat-slider min="1" max="10" step="1" discrete><input matSliderThumb [(ngModel)]="volume"></mat-slider>
+            </div>
+            <div class="weight-row">
+              <label>Complejidad: {{ complexity() }}</label>
+              <mat-slider min="1" max="10" step="1" discrete><input matSliderThumb [(ngModel)]="complexity"></mat-slider>
+            </div>
+            <div class="weight-row">
+              <label>Expertise: {{ expertise() }}</label>
+              <mat-slider min="1" max="10" step="1" discrete><input matSliderThumb [(ngModel)]="expertise"></mat-slider>
+            </div>
+            <div class="weight-row">
+              <label>Disponibilidad: {{ availability() }}</label>
+              <mat-slider min="1" max="10" step="1" discrete><input matSliderThumb [(ngModel)]="availability"></mat-slider>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="settings-card" appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>Umbrales</mat-card-title>
+            <mat-card-subtitle>Límites del sistema</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Carga Máx. por Estudiante</mat-label>
+              <input matInput type="number" [(ngModel)]="maxLoad">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Min. Revisiones por Estudiante</mat-label>
+              <input matInput type="number" [(ngModel)]="minReviews">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Umbral de Advertencia (%)</mat-label>
+              <input matInput type="number" [(ngModel)]="warningThreshold">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Umbral Crítico (%)</mat-label>
+              <input matInput type="number" [(ngModel)]="criticalThreshold">
+            </mat-form-field>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="settings-card" appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>Programación</mat-card-title>
+            <mat-card-subtitle>Automatización del balanceo</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="toggle-row">
+              <div>
+                <p class="toggle-label">Balanceo Automático</p>
+                <p class="toggle-desc">Ejecutar balanceo al crear nueva evaluación</p>
+              </div>
+              <mat-slide-toggle [(ngModel)]="autoBalance"></mat-slide-toggle>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="action-buttons">
+        <button mat-flat-button color="primary" (click)="saveConfig()">
+          <span class="material-symbols-outlined">save</span>
+          Guardar Configuración
+        </button>
+        <button mat-stroked-button (click)="resetDefaults()">
+          <span class="material-symbols-outlined">refresh</span>
+          Restablecer Valores
+        </button>
+        <button mat-stroked-button (click)="testAlgorithm()">
+          <span class="material-symbols-outlined">speed</span>
+          Probar Algoritmo
+        </button>
+      </div>
+    </div>
+  </main>
+</div>

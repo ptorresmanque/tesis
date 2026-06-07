@@ -1,0 +1,63 @@
+.header {
+  height: 64px;
+  background: var(--color-surface-container-lowest);
+  border-bottom: 1px solid var(--color-outline-variant);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.menu-btn {
+  display: none;
+}
+@media (max-width: 768px) {
+  .menu-btn { display: inline-flex; }
+}
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-on-surface);
+  margin: 0;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.notif-btn {
+  position: relative;
+  color: var(--color-on-surface-variant);
+}
+.notif-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: var(--color-error);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.user-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-on-surface);
+}
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+}

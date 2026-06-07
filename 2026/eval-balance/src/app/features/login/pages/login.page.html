@@ -1,0 +1,62 @@
+<div class="login-container">
+  <div class="login-bg"></div>
+  <mat-card class="login-card" appearance="outlined">
+    <div class="login-header">
+      <span class="material-symbols-outlined login-logo">balance</span>
+      <h1 class="login-title">EvalBalance</h1>
+      <p class="login-subtitle">Sistema de Balanceo de Carga de Evaluaciones</p>
+    </div>
+
+    @if (error()) {
+      <div class="error-message">
+        <span class="material-symbols-outlined">error</span>
+        <span>{{ error() }}</span>
+      </div>
+    }
+
+    <form class="login-form" (ngSubmit)="onLogin()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" placeholder="correo@institucion.cl" autocomplete="email" required>
+        <span matIconPrefix class="material-symbols-outlined">mail</span>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Contraseña</mat-label>
+        <input matInput [type]="hidePassword() ? 'password' : 'text'" [ngModel]="password()" (ngModelChange)="password.set($event)" name="password" placeholder="••••••••" autocomplete="current-password" required>
+        <span matIconPrefix class="material-symbols-outlined">lock</span>
+        <button matIconSuffix type="button" (click)="hidePassword.set(!hidePassword())" mat-icon-button>
+          <span class="material-symbols-outlined">{{ hidePassword() ? 'visibility_off' : 'visibility' }}</span>
+        </button>
+      </mat-form-field>
+
+      @if (loading()) {
+        <mat-progress-bar mode="indeterminate" class="login-progress"></mat-progress-bar>
+      }
+
+      <button mat-flat-button color="primary" class="full-width login-btn" type="submit" [disabled]="loading()">
+        @if (loading()) {
+          <span>Ingresando...</span>
+        } @else {
+          <span>Iniciar Sesión</span>
+        }
+      </button>
+
+      <div class="login-links">
+        <a href="#" class="link">¿Olvidaste tu contraseña?</a>
+        <a href="#" class="link">Crear Cuenta</a>
+      </div>
+    </form>
+
+    <div class="demo-section">
+      <p class="demo-label">Acceso rápido demo:</p>
+      <div class="demo-buttons">
+        <button mat-stroked-button (click)="loginAsAdmin()">Admin</button>
+        <button mat-stroked-button (click)="loginAsTeacher()">Profesor</button>
+        <button mat-stroked-button (click)="loginAsStudent()">Estudiante</button>
+      </div>
+    </div>
+
+    <p class="login-footer">© 2026 EvalBalance. Todos los derechos reservados.</p>
+  </mat-card>
+</div>

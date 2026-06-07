@@ -1,0 +1,195 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+  <main class="main-content">
+    <app-header title="Asignador Automático"></app-header>
+    <div class="content">
+      <div class="assigner-grid">
+        <mat-card class="form-card" appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>Configurar Evaluación</mat-card-title>
+            <mat-card-subtitle>Parámetros de asignación automática</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Título de la Evaluación</mat-label>
+              <input matInput [(ngModel)]="title" placeholder="Ej: Análisis de Requisitos">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Curso</mat-label>
+              <mat-select [(ngModel)]="course">
+                <mat-option value="INF-324">Ingeniería de Software</mat-option>
+                <mat-option value="INF-215">Bases de Datos</mat-option>
+                <mat-option value="INF-431">Redes de Computadores</mat-option>
+                <mat-option value="INF-542">Inteligencia Artificial</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <div class="slider-row">
+              <label class="slider-label">Complejidad de Rúbrica: {{ complexity() }}</label>
+              <mat-slider min="1" max="5" step="1" showTickMarks discrete>
+                <input matSliderThumb [(ngModel)]="complexity">
+              </mat-slider>
+            </div>
+
+            <div class="dual-inputs">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Min. Revisiones</mat-label>
+                <input matInput type="number" [(ngModel)]="minReviews" min="1" max="10">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Max. Revisiones</mat-label>
+                <input matInput type="number" [(ngModel)]="maxReviews" min="1" max="10">
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Fecha Límite</mat-label>
+              <input matInput [matDatepicker]="picker">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-divider class="my-4"></mat-divider>
+            <p class="section-title">Pesos del Algoritmo de Balanceo</p>
+
+            <div class="slider-row">
+              <label class="slider-label">Expertise Previa: {{ expertiseWeight() }}</label>
+              <mat-slider min="1" max="10" step="1" discrete>
+                <input matSliderThumb [(ngModel)]="expertiseWeight">
+              </mat-slider>
+            </div>
+            <div class="slider-row">
+              <label class="slider-label">Carga Actual: {{ loadWeight() }}</label>
+              <mat-slider min="1" max="10" step="1" discrete>
+                <input matSliderThumb [(ngModel)]="loadWeight">
+              </mat-slider>
+            </div>
+
+            <button mat-flat-button color="primary" class="full-width" (click)="onBalance()">
+              <span class="material-symbols-outlined">auto_awesome</span>
+              Ejecutar Balanceo Automático
+            </button>
+          </mat-card-content>
+        </mat-card>
+
+        <div class="results-area">
+          @if (balanced()) {
+            <mat-card class="result-card" appearance="outlined">
+              <mat-card-header>
+                <mat-card-title>Distribución Asignada</mat-card-title>
+                <mat-card-subtitle>Balanceo completado con 89% de equilibrio</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <table mat-table [dataSource]="assignmentData" class="full-width">
+                  <ng-container matColumnDef="student">
+                    <th mat-header-cell *matHeaderCellDef>Estudiante</th>
+                    <td mat-cell *matCellDef="let row">{{ row.student }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="evaluations">
+                    <th mat-header-cell *matHeaderCellDef>Evaluaciones</th>
+                    <td mat-cell *matCellDef="let row"><mat-chip>{{ row.evaluations }}</mat-chip></td>
+                  </ng-container>
+                  <ng-container matColumnDef="load">
+                    <th mat-header-cell *matHeaderCellDef>Carga</th>
+                    <td mat-cell *matCellDef="let row">{{ row.load }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="expertise">
+                    <th mat-header-cell *matHeaderCellDef>Expertise</th>
+                    <td mat-cell *matCellDef="let row">{{ row.expertise }}/5</td>
+                  </ng-container>
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let row">
+                      <button mat-icon-button color="warn"><span class="material-symbols-outlined">drag_indicator</span></button>
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+              </mat-card-content>
+            </mat-card>
+
+            <div class="charts-row">
+              <mat-card class="small-chart" appearance="outlined">
+                <mat-card-header><mat-card-title>Antes</mat-card-title></mat-card-header>
+                <mat-card-content>
+                  <div class="dist-chart">
+                    <div class="dist-segment" style="flex: 35; background: #2e7d32;">
+                      <span>35%</span>
+                    </div>
+                    <div class="dist-segment" style="flex: 40; background: #e65100;">
+                      <span>40%</span>
+                    </div>
+                    <div class="dist-segment" style="flex: 25; background: #fdd835;">
+                      <span>25%</span>
+                    </div>
+                  </div>
+                  <div class="dist-labels">
+                    <span class="text-green-700">Balanceado</span>
+                    <span class="text-orange-700">Sobrecargado</span>
+                    <span class="text-yellow-700">Subcargado</span>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+              <mat-card class="small-chart" appearance="outlined">
+                <mat-card-header><mat-card-title>Después</mat-card-title></mat-card-header>
+                <mat-card-content>
+                  <div class="dist-chart">
+                    <div class="dist-segment" style="flex: 78; background: #2e7d32;">
+                      <span>78%</span>
+                    </div>
+                    <div class="dist-segment" style="flex: 12; background: #e65100;">
+                      <span>12%</span>
+                    </div>
+                    <div class="dist-segment" style="flex: 10; background: #fdd835;">
+                      <span>10%</span>
+                    </div>
+                  </div>
+                  <div class="dist-labels">
+                    <span class="text-green-700">Balanceado</span>
+                    <span class="text-orange-700">Sobrecargado</span>
+                    <span class="text-yellow-700">Subcargado</span>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <button mat-stroked-button color="primary" class="full-width" (click)="onExplain()">
+              <span class="material-symbols-outlined">lightbulb</span>
+              Explicar Asignación (XAI)
+            </button>
+
+            @if (showExplanation()) {
+              <mat-card class="shap-card" appearance="outlined">
+                <mat-card-header>
+                  <mat-card-title>Valores SHAP</mat-card-title>
+                  <mat-card-subtitle>Factores que influyeron en la asignación</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  @for (item of explanationData.SHAP; track item.feature) {
+                    <div class="shap-row">
+                      <span class="shap-feature">{{ item.feature }}</span>
+                      <div class="shap-bar-track">
+                        <div class="shap-bar" [style.width.%]="item.impact * 100" style="background: linear-gradient(90deg, #1565c0, #42a5f5);"></div>
+                      </div>
+                      <span class="shap-value">{{ item.impact.toFixed(2) }}</span>
+                    </div>
+                  }
+                </mat-card-content>
+              </mat-card>
+            }
+          } @else {
+            <mat-card class="placeholder-card" appearance="outlined">
+              <div class="placeholder-content">
+                <span class="material-symbols-outlined placeholder-icon">assignment_add</span>
+                <h3>Configure los parámetros y ejecute el balanceo</h3>
+                <p>El algoritmo híbrido Round-Robin + Genético distribuirá las evaluaciones equitativamente</p>
+              </div>
+            </mat-card>
+          }
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

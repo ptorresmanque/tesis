@@ -1,0 +1,39 @@
+.layout { display: flex; min-height: 100vh; }
+.main-content { flex: 1; margin-left: 260px; background: var(--color-background); }
+.content { padding: 24px; }
+.load-header { display: flex; align-items: center; gap: 40px; margin-bottom: 32px; padding: 24px; background: var(--color-surface-container-lowest); border-radius: 16px; border: 1px solid var(--color-outline-variant); }
+.circular-progress-wrapper { text-align: center; }
+.circular-progress { width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+.progress-inner { background: white; width: 94px; height: 94px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.progress-value { font-size: 28px; font-weight: 700; color: var(--color-primary); line-height: 1; }
+.progress-max { font-size: 14px; color: var(--color-on-surface-variant); }
+.load-label { font-size: 14px; font-weight: 600; color: var(--color-on-surface); }
+.load-sub { font-size: 12px; color: var(--color-outline); }
+.load-stats { display: flex; gap: 32px; }
+.stat-item { text-align: center; }
+.stat-value { font-size: 32px; font-weight: 700; color: var(--color-on-surface); display: block; }
+.stat-value.urgent { color: #c62828; }
+.stat-value.success { color: #1565c0; }
+.stat-value.done { color: #2e7d32; }
+.stat-label { font-size: 13px; color: var(--color-on-surface-variant); }
+.kanban-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; min-height: 400px; }
+@media (max-width: 1024px) { .kanban-board { grid-template-columns: 1fr; } }
+.kanban-column { display: flex; flex-direction: column; gap: 12px; }
+.kanban-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 8px; font-weight: 600; font-size: 14px; }
+.pending-header { background: #fff3e0; color: #e65100; }
+.progress-header { background: #e3f2fd; color: #1565c0; }
+.completed-header { background: #e8f5e9; color: #2e7d32; }
+.count-badge { background: rgba(0,0,0,0.1); padding: 2px 10px; border-radius: 12px; font-size: 12px; }
+.kanban-cards { display: flex; flex-direction: column; gap: 8px; }
+.task-card { border-radius: 8px; cursor: grab; }
+.task-card.overdue { border-color: #c62828 !important; }
+.task-meta { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+.complexity-chip { font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: 12px; }
+.overdue-badge { font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 12px; background: #c62828; color: white; }
+.grade-badge { font-size: 12px; font-weight: 600; color: #2e7d32; }
+.task-due { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-on-surface-variant); }
+.task-due span { font-size: 16px; }
+.fab-button { position: fixed; bottom: 24px; right: 24px; z-index: 100; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+.extension-modal { width: 100%; max-width: 500px; padding: 24px; border-radius: 16px; }
+.extension-modal .full-width { width: 100%; margin-top: 16px; }

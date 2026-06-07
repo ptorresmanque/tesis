@@ -1,0 +1,94 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+  <main class="main-content">
+    <app-header title="Calendario de Plazos"></app-header>
+    <div class="content">
+      <div class="calendar-grid">
+        <mat-card class="calendar-card" appearance="outlined">
+          <mat-card-header>
+            <div class="calendar-nav">
+              <button mat-icon-button (click)="prevMonth()"><span class="material-symbols-outlined">chevron_left</span></button>
+              <span class="month-title">{{ monthName }} {{ currentYear() }}</span>
+              <button mat-icon-button (click)="nextMonth()"><span class="material-symbols-outlined">chevron_right</span></button>
+            </div>
+            <button mat-stroked-button (click)="goToToday()" class="today-btn">Hoy</button>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="calendar-weekdays">
+              @for (day of ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']; track day) {
+                <span class="weekday">{{ day }}</span>
+              }
+            </div>
+            <div class="calendar-days">
+              @for (day of calendarDays; track $index) {
+                @if (day !== null) {
+                  <div class="calendar-day" [class.today]="isToday(day)" [class.selected]="selectedDay() === day" (click)="selectedDay.set(day)">
+                    <span class="day-num">{{ day }}</span>
+                    @if (getEventsForDay(day).length > 0) {
+                      <div class="day-events">
+                        @for (ev of getEventsForDay(day); track ev.id) {
+                          <span class="day-event-dot" [style.background]="ev.urgency === 'critical' ? '#c62828' : ev.urgency === 'urgent' ? '#e65100' : '#1565c0'"></span>
+                        }
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <div class="calendar-day empty"></div>
+                }
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <div class="side-panel">
+          @if (selectedDay(); as day) {
+            <mat-card class="day-detail" appearance="outlined">
+              <mat-card-header>
+                <mat-card-title>{{ day }} de {{ monthName }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                @if (getEventsForDay(day).length === 0) {
+                  <p class="no-events">No hay eventos este día</p>
+                }
+                @for (ev of getEventsForDay(day); track ev.id) {
+                  <div class="event-card-inline" [class]="ev.urgency">
+                    <span class="material-symbols-outlined event-icon">{{ ev.type === 'exam' ? 'fact_check' : ev.type === 'assignment' ? 'assignment' : 'rate_review' }}</span>
+                    <div>
+                      <p class="event-title">{{ ev.title }}</p>
+                      <p class="event-course">{{ ev.course }}</p>
+                    </div>
+                  </div>
+                }
+              </mat-card-content>
+            </mat-card>
+          }
+
+          <mat-card class="upcoming-card" appearance="outlined">
+            <mat-card-header>
+              <mat-card-title>Próximos Plazos</mat-card-title>
+              <div class="filter-chips">
+                @for (f of ['all','pending','urgent']; track f) {
+                  <button mat-stroked-button [class.active]="filter() === f" (click)="setFilter(f)" class="chip-btn">{{ f === 'all' ? 'Todas' : f === 'pending' ? 'Pendientes' : 'Urgentes' }}</button>
+                }
+              </div>
+            </mat-card-header>
+            <mat-card-content>
+              @for (ev of filteredUpcoming; track ev.id) {
+                <div class="upcoming-item">
+                  <div class="upcoming-left">
+                    <span class="upcoming-date">{{ ev.date | date:'dd/MM' }}</span>
+                  </div>
+                  <div class="upcoming-mid">
+                    <p class="upcoming-title">{{ ev.title }}</p>
+                    <p class="upcoming-course">{{ ev.course }}</p>
+                  </div>
+                  <span class="urgency-badge" [style.background]="ev.urgency === 'critical' ? '#c62828' : ev.urgency === 'urgent' ? '#e65100' : '#1565c0'">{{ ev.urgency === 'critical' ? 'Crítico' : ev.urgency === 'urgent' ? 'Urgente' : 'Normal' }}</span>
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

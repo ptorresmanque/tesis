@@ -1,0 +1,26 @@
+.layout { display: flex; min-height: 100vh; }
+.main-content { flex: 1; margin-left: 260px; background: var(--color-background); }
+.content { padding: 24px; max-width: 800px; margin: 0 auto; }
+.notif-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.notif-count { font-size: 14px; color: var(--color-on-surface-variant); margin: 0; }
+.notif-group { margin-bottom: 28px; }
+.group-label { font-size: 14px; font-weight: 600; color: var(--color-outline); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+.notif-list { border-radius: 12px; overflow: hidden; }
+.notif-item { display: flex; align-items: center; gap: 16px; padding: 16px 20px; cursor: pointer; transition: background 0.2s; }
+.notif-item:hover { background: var(--color-surface-container-low); }
+.notif-item.unread { background: var(--color-surface-container); }
+.notif-icon-wrapper { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.notif-icon-wrapper.info { background: #e3f2fd; color: #1565c0; }
+.notif-icon-wrapper.warning { background: #fff3e0; color: #e65100; }
+.notif-icon-wrapper.success { background: #e8f5e9; color: #2e7d32; }
+.notif-icon-wrapper.error { background: #ffebee; color: #c62828; }
+.notif-content { flex: 1; min-width: 0; }
+.notif-title-row { display: flex; align-items: center; gap: 8px; }
+.notif-title { font-size: 14px; font-weight: 600; color: var(--color-on-surface); }
+.unread-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-primary); flex-shrink: 0; }
+.notif-message { font-size: 13px; color: var(--color-on-surface-variant); margin: 4px 0; line-height: 1.4; }
+.notif-time { font-size: 12px; color: var(--color-outline); }
+.notif-arrow { color: var(--color-outline-variant); }
+.empty-state { border-radius: 12px; min-height: 300px; display: flex; align-items: center; justify-content: center; }
+.empty-content { text-align: center; }
+.empty-icon { font-size: 64px; color: var(--color-outline-variant); }

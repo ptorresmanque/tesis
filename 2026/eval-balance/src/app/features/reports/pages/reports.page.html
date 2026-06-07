@@ -1,0 +1,124 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+  <main class="main-content">
+    <app-header title="Reportes Analíticos"></app-header>
+    <div class="content">
+      <div class="metrics-row">
+        @for (m of metrics; track m.label) {
+          <mat-card class="mini-metric" appearance="outlined">
+            <div class="mini-metric-content">
+              <span class="material-symbols-outlined mini-icon" style="color: var(--color-primary);">{{ m.icon }}</span>
+              <div>
+                <p class="mini-value">{{ m.value }}</p>
+                <p class="mini-label">{{ m.label }}</p>
+              </div>
+            </div>
+            <span class="mini-change" [class.positive]="m.change.startsWith('+')" [class.negative]="m.change.startsWith('-')">{{ m.change }}</span>
+          </mat-card>
+        }
+      </div>
+
+      <mat-card class="filter-card" appearance="outlined">
+        <div class="filter-row">
+          <mat-form-field appearance="outline" class="filter-item">
+            <mat-label>Tipo de Reporte</mat-label>
+            <mat-select [(value)]="reportType">
+              <mat-option value="load">Distribución de Carga</mat-option>
+              <mat-option value="performance">Rendimiento</mat-option>
+              <mat-option value="trends">Tendencias</mat-option>
+              <mat-option value="equity">Equidad</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-item">
+            <mat-label>Curso</mat-label>
+            <mat-select>
+              <mat-option value="all">Todos los cursos</mat-option>
+              <mat-option value="INF-324">Ingeniería de Software</mat-option>
+              <mat-option value="INF-215">Bases de Datos</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-item">
+            <mat-label>Rango de Fechas</mat-label>
+            <input matInput [matDatepicker]="rpicker" placeholder="Seleccionar">
+            <mat-datepicker-toggle matSuffix [for]="rpicker"></mat-datepicker-toggle>
+            <mat-datepicker #rpicker></mat-datepicker>
+          </mat-form-field>
+          <div class="export-buttons">
+            <button mat-stroked-button><span class="material-symbols-outlined">file_download</span> PDF</button>
+            <button mat-stroked-button><span class="material-symbols-outlined">table_chart</span> CSV</button>
+          </div>
+        </div>
+      </mat-card>
+
+      <div class="charts-grid">
+        <mat-card class="report-chart" appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>Tendencia de Carga</mat-card-title>
+            <mat-card-subtitle>Últimos 30 días</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="trend-chart">
+              @for (bar of [28, 32, 30, 35, 38, 36, 40, 42, 39, 37, 35, 32, 30, 33, 36, 38, 41, 43, 40, 38, 35, 33, 36, 39, 42, 44, 41, 39, 36, 34]; track $index) {
+                <div class="trend-bar" [style.height.px]="bar" [style.background]="bar > 38 ? '#e65100' : bar > 32 ? '#fdd835' : '#2e7d32'" [title]="'Día ' + ($index + 1) + ': ' + bar"></div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="report-chart" appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>Carga por Departamento</mat-card-title>
+            <mat-card-subtitle>Distribución actual</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            @for (item of courseData; track item.course) {
+              <div class="dept-row">
+                <span class="dept-name">{{ item.course }}</span>
+                <div class="dept-bar-track">
+                  <div class="dept-bar-fill" [style.width.%]="(item.avgLoad / 5) * 100" [style.background]="item.avgLoad > 3.5 ? '#e65100' : item.avgLoad > 2.5 ? '#fdd835' : '#2e7d32'"></div>
+                </div>
+                <span class="dept-value">{{ item.avgLoad }}</span>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card class="data-table-card" appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>Detalle por Curso</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <table mat-table [dataSource]="courseData" class="full-width">
+            <ng-container matColumnDef="course">
+              <th mat-header-cell *matHeaderCellDef>Curso</th>
+              <td mat-cell *matCellDef="let row">{{ row.course }}</td>
+            </ng-container>
+            <ng-container matColumnDef="students">
+              <th mat-header-cell *matHeaderCellDef>Estudiantes</th>
+              <td mat-cell *matCellDef="let row">{{ row.students }}</td>
+            </ng-container>
+            <ng-container matColumnDef="avgLoad">
+              <th mat-header-cell *matHeaderCellDef>Carga Prom.</th>
+              <td mat-cell *matCellDef="let row">{{ row.avgLoad }}</td>
+            </ng-container>
+            <ng-container matColumnDef="balance">
+              <th mat-header-cell *matHeaderCellDef>Balance %</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="balance-chip" [style.background]="row.balance > 80 ? '#e8f5e9' : row.balance > 60 ? '#fff3e0' : '#ffebee'" [style.color]="row.balance > 80 ? '#2e7d32' : row.balance > 60 ? '#e65100' : '#c62828'">{{ row.balance }}%</span>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="trend">
+              <th mat-header-cell *matHeaderCellDef>Tendencia</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="material-symbols-outlined" [style.color]="row.trend === 'down' ? '#c62828' : '#2e7d32'">{{ row.trend === 'down' ? 'trending_down' : 'trending_up' }}</span>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,107 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+  <main class="main-content">
+    <app-header title="Perfil de Usuario"></app-header>
+    <div class="content">
+      <mat-card class="profile-card" appearance="outlined">
+        <div class="profile-header">
+          <div class="avatar-section">
+            <div class="avatar-placeholder">
+              <span class="material-symbols-outlined avatar-icon">account_circle</span>
+            </div>
+            <button mat-stroked-button>Cambiar Foto</button>
+          </div>
+          <div class="profile-info">
+            <h2>{{ name() }}</h2>
+            <p class="info-email">{{ email() }}</p>
+            <p class="info-role">{{ authService.getCurrentUser()?.role === 'admin' ? 'Administrador' : authService.getCurrentUser()?.role === 'teacher' ? 'Profesor' : 'Estudiante' }}</p>
+          </div>
+        </div>
+      </mat-card>
+
+      <mat-card class="profile-details" appearance="outlined">
+        <mat-tab-group>
+          <mat-tab label="Configuración de Cuenta">
+            <div class="tab-content">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nombre Completo</mat-label>
+                <input matInput [(ngModel)]="name">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Email</mat-label>
+                <input matInput [(ngModel)]="email" type="email">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Departamento</mat-label>
+                <mat-select [(ngModel)]="department">
+                  <mat-option value="Ingeniería Informática">Ingeniería Informática</mat-option>
+                  <mat-option value="Matemáticas">Matemáticas</mat-option>
+                  <mat-option value="Física">Física</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Biografía</mat-label>
+                <textarea matInput [(ngModel)]="bio" rows="3" placeholder="Breve descripción..."></textarea>
+              </mat-form-field>
+              <mat-divider class="my-4"></mat-divider>
+              <h3 class="section-title">Cambiar Contraseña</h3>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Contraseña Actual</mat-label>
+                <input matInput type="password">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nueva Contraseña</mat-label>
+                <input matInput type="password">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Confirmar Contraseña</mat-label>
+                <input matInput type="password">
+              </mat-form-field>
+              <div class="form-actions">
+                <button mat-flat-button color="primary" (click)="saveChanges()">Guardar Cambios</button>
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab label="Preferencias de Notificación">
+            <div class="tab-content">
+              <div class="toggle-row">
+                <div>
+                  <p class="toggle-label">Notificaciones por Email</p>
+                  <p class="toggle-desc">Recibir alertas de evaluaciones y balanceo</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="notifEmail"></mat-slide-toggle>
+              </div>
+              <mat-divider class="my-4"></mat-divider>
+              <div class="toggle-row">
+                <div>
+                  <p class="toggle-label">Notificaciones Push</p>
+                  <p class="toggle-desc">Notificaciones en tiempo real en el navegador</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="notifPush"></mat-slide-toggle>
+              </div>
+              <mat-divider class="my-4"></mat-divider>
+              <div class="toggle-row">
+                <div>
+                  <p class="toggle-label">Resumen Semanal</p>
+                  <p class="toggle-desc">Reporte semanal de actividad y carga</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="notifDigest"></mat-slide-toggle>
+              </div>
+              <mat-divider class="my-4"></mat-divider>
+              <div class="toggle-row">
+                <div>
+                  <p class="toggle-label">Recordatorios</p>
+                  <p class="toggle-desc">Alertas de fechas límite próximas</p>
+                </div>
+                <mat-slide-toggle [(ngModel)]="notifReminders"></mat-slide-toggle>
+              </div>
+              <div class="form-actions">
+                <button mat-flat-button color="primary" (click)="saveChanges()">Guardar Cambios</button>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card>
+    </div>
+  </main>
+</div>

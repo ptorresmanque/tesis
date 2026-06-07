@@ -1,0 +1,75 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+  <main class="main-content">
+    <app-header title="Historial de Evaluaciones"></app-header>
+    <div class="content">
+      <div class="history-controls">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar evaluaciones</mat-label>
+          <input matInput [(ngModel)]="searchQuery" placeholder="Título, curso...">
+          <span matPrefix class="material-symbols-outlined search-icon">search</span>
+        </mat-form-field>
+        <div class="filter-chips">
+          @for (f of [{key:'all',label:'Todas'},{key:'completed',label:'Completadas'},{key:'graded',label:'Calificadas'},{key:'past_due',label:'Vencidas'}]; track f.key) {
+            <button mat-stroked-button [class.active]="filterStatus() === f.key" (click)="filterStatus.set(f.key)">{{ f.label }}</button>
+          }
+        </div>
+        <mat-form-field appearance="outline" class="sort-field">
+          <mat-label>Ordenar</mat-label>
+          <select matNativeControl [(ngModel)]="sortOrder">
+            <option value="newest">Más recientes</option>
+            <option value="oldest">Más antiguos</option>
+          </select>
+        </mat-form-field>
+      </div>
+
+      <mat-card class="history-list" appearance="outlined">
+        @for (ev of filteredEvals; track ev.id) {
+          <mat-accordion>
+            <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+              <mat-expansion-panel-header>
+                <div class="eval-row">
+                  <div class="eval-info">
+                    <span class="eval-title">{{ ev.title }}</span>
+                    <span class="eval-course">{{ ev.course }}</span>
+                  </div>
+                  <div class="eval-meta">
+                    <span class="eval-status" [style.color]="statusColors[ev.status]">
+                      {{ ev.status === 'completed' ? 'Completada' : ev.status === 'graded' ? 'Calificada' : 'Vencida' }}
+                    </span>
+                    <span class="eval-date">{{ ev.dueDate }}</span>
+                    @if (ev.status !== 'past_due') {
+                      <span class="eval-grade" [style.color]="(ev.grade / ev.maxGrade) >= 0.6 ? '#2e7d32' : '#c62828'">{{ ev.grade }}/{{ ev.maxGrade }}</span>
+                    }
+                  </div>
+                  <span class="material-symbols-outlined">expand_more</span>
+                </div>
+              </mat-expansion-panel-header>
+              <div class="expanded-detail">
+                <div class="detail-row">
+                  <span class="detail-label">Score Rúbrica:</span>
+                  <span class="detail-value">{{ ev.rubricScore }}/5.0</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Comentarios:</span>
+                  <p class="detail-comment">{{ ev.reviewerComments || 'Sin comentarios' }}</p>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Tiempo dedicado:</span>
+                  <span class="detail-value">{{ ev.timeSpent }}</span>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        }
+
+        @if (filteredEvals.length === 0) {
+          <div class="empty-state">
+            <span class="material-symbols-outlined empty-icon">search</span>
+            <p>No se encontraron evaluaciones</p>
+          </div>
+        }
+      </mat-card>
+    </div>
+  </main>
+</div>
